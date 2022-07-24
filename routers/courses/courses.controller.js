@@ -1,4 +1,4 @@
-const { getAllCourses, getOneCourse, addOneCourse, updateCourse } = require("../../models/courses/Course.model")
+const { getAllCourses, getOneCourse, addOneCourse, updateCourse, deleteCourse } = require("../../models/courses/Course.model")
 const ErrorResponse = require('../../utils/errorResponse');
 const asyncHandler = require("../../middleware/async")
 const Bootcamps = require('../../models/bootcamps/Bootcamp.mongo');
@@ -52,6 +52,25 @@ exports.httpsUpdateCourse = asyncHandler(async function(req, res, next) {
     })
 
 })
+
+exports.httpsDeleteCourse = asyncHandler(async (req, res, next) => {
+    const course = await getOneCourse(req.params.id)
+  
+    if (!course) {
+      return next(
+        new ErrorResponse(`No course with the id of ${req.params.id}`),
+        404
+      );
+    }
+
+    await deleteCourse(req.params.id)
+  
+    res.status(200).json({
+      success: true,
+      data: {}
+    });
+  });
+  
 
 // exports.httpsGetAllBootcamps = asyncHandler(async function(req, res, next) {
 

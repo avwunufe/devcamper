@@ -25,12 +25,14 @@ async function getOneCourse(id){
 
     return course
 }
+
 async function addOneCourse(reqBody, params){
     reqBody.bootcamp = params.bootcampId
     const course = await Courses.create(reqBody)
 
     return course
 }
+
 async function updateCourse(id, reqBody){
     const updatedCourse = await Courses.findByIdAndUpdate(id, reqBody, {
         new: true,
@@ -40,9 +42,17 @@ async function updateCourse(id, reqBody){
     return updatedCourse
 }
 
+async function deleteCourse(id) {
+    const course = await getOneCourse(id)
+    await course.remove();
+
+    return 
+}
+
 module.exports = {
     getAllCourses,
     getOneCourse,
     addOneCourse,
-    updateCourse
+    updateCourse,
+    deleteCourse
 }
