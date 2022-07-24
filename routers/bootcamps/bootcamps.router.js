@@ -4,8 +4,13 @@ const {
     httpsCreateBootcamp,
     httpsUpdateBootcamp,
     httpsDeleteBootcamp,
-    httpsGetOneBootcamp
+    httpsGetOneBootcamp,
+    httpsGetOneBootcampByRadius
 } = require("./bootcamps.controller")
+const courseRouter = require("../courses/courses.router")
+
+router.use("/:bootcampId/courses", courseRouter)
+router.route("/radius/:zipcode/:distance").get(httpsGetOneBootcampByRadius)
 
 router.route("/").get(httpsGetAllBootcamps).post(httpsCreateBootcamp)
 
