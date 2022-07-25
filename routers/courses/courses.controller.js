@@ -2,14 +2,13 @@ const { getAllCourses, getOneCourse, addOneCourse, updateCourse, deleteCourse } 
 const ErrorResponse = require('../../utils/errorResponse');
 const asyncHandler = require("../../middleware/async")
 const Bootcamps = require('../../models/bootcamps/Bootcamp.mongo');
-const BootcampMongo = require("../../models/bootcamps/Bootcamp.mongo");
 
 exports.httpsGetAllCourses = asyncHandler(async function(req, res, next) {
-    const data = await getAllCourses(req.params)
+    const data = await getAllCourses(req.params, req.query)
     res.status(200).json({
         success: true,
         data: data.courses,
-        // pagination: result.pagination
+        pagination: data.pagination
     })
     
 })

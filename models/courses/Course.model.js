@@ -1,20 +1,27 @@
 const { query } = require("express")
 const Courses = require("./Course.mongo")
 const Bootcamps = require('../bootcamps/Bootcamp.mongo');
-const req = require("express/lib/request");
+const advancedResult = require('../../utils/advancedResults');
 
-async function getAllCourses(params){
-    let query
+async function getAllCourses(params, query){
+    let databaseQuery
+    const total = await Courses.countDocuments()
     if(params.bootcampId){
-        query = Courses.find({
+        databaseQuery = Courses.find({
             bootcamp: params.bootcampId
         })
     } else {
-        query = Courses.find({})
+        databaseQuery = Courses.find({}).populate({
+            path: "bootcamp",
+            select: "name description"
+        })
     }
 
-    const courses = await query
-    return {courses, pagination: {}}
+    const { databaseQueryFinal, pagination } = await advancedResult(databaseQuery, query, total)
+
+    const courses = await databaseQueryFinal;
+
+    return {courses, pagination }
 }
 
 async function getOneCourse(id){

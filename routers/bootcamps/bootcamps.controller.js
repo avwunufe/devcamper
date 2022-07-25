@@ -2,6 +2,7 @@ const {createBootcamp, getAllBootcamps, getSingleBootcamp, updateBootcamp, delet
 const ErrorResponse = require('../../utils/errorResponse');
 const asyncHandler = require("../../middleware/async")
 const geocoder = require("../../utils/geocoder")
+const fileupload = require('express-fileupload');
 
 exports.httpsGetAllBootcamps = asyncHandler(async function(req, res, next) {
 
@@ -60,11 +61,24 @@ exports.httpsUpdateBootcamp = asyncHandler(async function(req, res, next) {
 })
 
 exports.httpsDeleteBootcamp = asyncHandler(async function(req, res, next) {
-        const bootcamp = await deleteBootcamp(req.params.id)
-        if(!bootcamp) return next(new ErrorResponse(`Bootcamp not found with ID of ${req.params.id}`, 404))
-        res.status(200).json({
-            success: true,
-            data: {}
-        })
+    
+    const bootcamp = await getSingleBootcamp(req.params.id)
+    if(!bootcamp) return next(new ErrorResponse(`Bootcamp not found with ID of ${req.params.id}`, 404))
+    const deletedBootcamp = await deleteBootcamp(req.params.id)
+    res.status(200).json({
+        success: true,
+        data: {}
+    })
 })
 
+exports.httpsBootcampPhotoUpload = asyncHandler(async function(req, res, next) {
+        
+    const bootcamp = await getSingleBootcamp(req.params.id)
+    if(!bootcamp) return next(new ErrorResponse(`Bootcamp not found with ID of ${req.params.id}`, 404))
+    console.log(req);
+    if(!req.files) return next(new ErrorResponse(`Please upload a file`, 400))
+    res.status(200).json({
+        success: true,
+        data: {}
+    })
+})
